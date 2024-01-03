@@ -1,0 +1,22 @@
+#
+# Run two services: the Docker registry and an Nginx reverse-proxy
+#
+
+version: '3'
+
+services:
+  web:
+    build: ./webserver
+    ports:
+    - "80:80"
+
+  registry:
+    image: registry:2
+    environment:
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/registry.htpasswd
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+    volumes:
+      - ./auth:/auth
+      - ./data:/data
